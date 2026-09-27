@@ -93,6 +93,18 @@ docker compose up -d --no-build
 docker compose up -d --build
 ```
 
+### 不在服务器创建 `.env`
+
+如果不想在服务器上单独创建 `.env`，可以使用项目目录中根据当前配置生成的私有文件：
+
+```bash
+chmod 600 compose.private.yaml
+docker compose -f compose.private.yaml pull
+docker compose -f compose.private.yaml up -d
+```
+
+`compose.private.yaml` 已经内嵌当前环境配置和 Docker Hub 镜像地址，服务器上不需要 `DOCKERHUB_IMAGE` 或 `.env`。该文件包含真实密钥，已设置为仅文件所有者可读写，并且不会提交到 Git；复制到服务器时请使用安全通道。
+
 ### 使用现有 `.env` 启动
 
 如果服务器上已经有项目根目录的 `.env`，可以直接使用项目提供的 `compose.local.yaml`。它会把 `.env` 中的 `MINIMAX_API_KEY`、`PROXY_API_KEY`、`HOST`、`PORT`、`MINIMAX_BASE_URL` 和 `REQUEST_TIMEOUT_MS` 传入容器：
@@ -180,7 +192,7 @@ docker rm minimax-stt
 
 ## 发布到 Docker Hub
 
-项目的 Compose 配置已经固定使用以下 Docker Hub 镜像，不需要设置任何 `DOCKERHUB_IMAGE` 环境变量：
+项目的 Compose 配置已经固定使用以下 Docker Hub 镜像，不需要额外设置镜像名称环境变量：
 
 ```text
 docker.io/yaotutu/minimax-stt:latest

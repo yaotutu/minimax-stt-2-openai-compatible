@@ -87,14 +87,6 @@ docker compose pull
 docker compose up -d --no-build
 ```
 
-生产环境建议锁定版本：
-
-```bash
-export DOCKERHUB_IMAGE=yaotutu/minimax-stt:0.1.0
-docker compose pull
-docker compose up -d --no-build
-```
-
 如果希望在本机重新构建而不是使用 Docker Hub 镜像：
 
 ```bash
@@ -188,25 +180,25 @@ docker rm minimax-stt
 
 ## 发布到 Docker Hub
 
-`compose.yaml` 支持通过 `DOCKERHUB_IMAGE` 指定镜像名称。默认使用 Docker Hub 镜像：
+项目的 Compose 配置已经固定使用以下 Docker Hub 镜像，不需要设置任何 `DOCKERHUB_IMAGE` 环境变量：
 
 ```text
-yaotutu/minimax-stt:latest
+docker.io/yaotutu/minimax-stt:latest
 ```
 
-如果需要优先使用本地构建镜像，可以显式覆盖：
+如果服务器上已经有项目根目录的 `.env`，使用 `compose.local.yaml` 时默认固定使用：
 
-```bash
-export DOCKERHUB_IMAGE=minimax-stt:latest
+```text
+docker.io/yaotutu/minimax-stt:0.1.0
 ```
 
-准备发布时，先在 Docker Hub 创建一个仓库，例如：
+准备发布时，先在 Docker Hub 创建仓库：
 
 ```text
 yaotutu/minimax-stt
 ```
 
-然后在服务器上登录 Docker Hub。建议使用 Docker Hub Access Token，不要在聊天或脚本中保存密码：
+然后登录 Docker Hub。建议使用 Docker Hub Access Token，不要在聊天或脚本中保存密码：
 
 ```bash
 docker login
@@ -215,30 +207,33 @@ docker login
 构建并推送带版本号和 `latest` 标签的镜像：
 
 ```bash
-export DOCKERHUB_IMAGE=docker.io/yaotutu/minimax-stt
-export IMAGE_VERSION=0.1.0
+docker build \
+  -t docker.io/yaotutu/minimax-stt:0.1.0 \
+  -t docker.io/yaotutu/minimax-stt:latest \
+  .
 
-docker build -t "$DOCKERHUB_IMAGE:$IMAGE_VERSION" -t "$DOCKERHUB_IMAGE:latest" .
-docker push "$DOCKERHUB_IMAGE:$IMAGE_VERSION"
-docker push "$DOCKERHUB_IMAGE:latest"
+docker push docker.io/yaotutu/minimax-stt:0.1.0
+docker push docker.io/yaotutu/minimax-stt:latest
 ```
 
-其他服务器使用 Docker Hub 镜像时，需要先在当前 Shell 设置 MiniMax API Key：
+其他服务器使用默认 Compose 配置时，只需要设置应用密钥：
 
 ```bash
 export MINIMAX_API_KEY='你的 MiniMax API Key'
 export PROXY_API_KEY='随机生成的代理访问密钥'
-export DOCKERHUB_IMAGE=docker.io/yaotutu/minimax-stt
 
 docker compose pull
 docker compose up -d --no-build
 ```
 
-如果仓库是私有仓库，目标服务器也需要先执行 `docker login`。建议生产环境优先使用固定版本号，不要只依赖 `latest`：
+如果服务器使用当前项目的 `.env` 文件，则执行：
 
 ```bash
-export DOCKERHUB_IMAGE=docker.io/yaotutu/minimax-stt:0.1.0
+docker compose -f compose.local.yaml pull
+docker compose -f compose.local.yaml up -d
 ```
+
+如果仓库是私有仓库，目标服务器需要先执行 `docker login`。生产环境建议使用固定版本的 `compose.local.yaml`，不要只依赖 `latest`。
 
 ## Docker 测试端口
 

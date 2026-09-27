@@ -1,6 +1,6 @@
 services:
   minimax-stt:
-    image: ${DOCKERHUB_IMAGE:-docker.io/yaotutu/minimax-stt:0.1.0}
+    image: docker.io/yaotutu/minimax-stt:0.1.0
     restart: unless-stopped
     env_file:
       - .env

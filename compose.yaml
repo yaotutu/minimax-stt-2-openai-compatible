@@ -1,0 +1,10 @@
+services:
+  minimax-stt:
+    image: ${DOCKERHUB_IMAGE:-yaotutu/minimax-stt:latest}
+    build: .
+    restart: unless-stopped
+    environment:
+      MINIMAX_API_KEY: ${MINIMAX_API_KEY:?MINIMAX_API_KEY is required}
+      PROXY_API_KEY: ${PROXY_API_KEY:-}
+    ports:
+      - "127.0.0.1:18080:18080"

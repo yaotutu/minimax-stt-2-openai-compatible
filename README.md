@@ -101,6 +101,17 @@ docker compose up -d --no-build
 docker compose up -d --build
 ```
 
+### 使用现有 `.env` 启动
+
+如果服务器上已经有项目根目录的 `.env`，可以直接使用项目提供的 `compose.local.yaml`。它会把 `.env` 中的 `MINIMAX_API_KEY`、`PROXY_API_KEY`、`HOST`、`PORT`、`MINIMAX_BASE_URL` 和 `REQUEST_TIMEOUT_MS` 传入容器：
+
+```bash
+docker compose -f compose.local.yaml pull
+docker compose -f compose.local.yaml up -d
+```
+
+这个配置默认使用 `docker.io/yaotutu/minimax-stt:0.1.0`，并将服务绑定到 `127.0.0.1:${PORT}`。`.env` 只在服务器本地使用，不要提交到 Git。
+
 查看状态和日志：
 
 ```bash

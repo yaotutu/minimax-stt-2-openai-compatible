@@ -1,0 +1,18 @@
+{
+  "name": "minimax-stt-openai-compatible",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bun proxy that exposes MiniMax Speech-to-Text through the OpenAI-compatible audio transcriptions API.",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "start": "bun run src/index.ts",
+    "test": "bun test",
+    "typecheck": "bunx tsc --noEmit",
+    "check": "bun test && bun run typecheck"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "latest"
+  }
+}
